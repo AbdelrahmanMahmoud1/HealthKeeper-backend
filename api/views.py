@@ -11,6 +11,7 @@ from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.staticfiles.views import serve
 
+
 @api_view(['GET'])
 def getRoutes(request):
 
