@@ -3,10 +3,10 @@ import uuid
 from UserProfile.models import UserProfile
 
 # Create your models here.
-class Document(models.Model):
-    file = models.FileField(upload_to='uploads/')
+class Medications(models.Model):
     name = models.CharField(max_length=500, unique=True)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     userId = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    url = models.CharField(max_length=1000, null=True, blank=True)
+    time = models.DateTimeField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)

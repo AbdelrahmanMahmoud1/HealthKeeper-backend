@@ -1,4 +1,5 @@
 from django.shortcuts import render
+import os
 
 # Create your views here.
 from django.http import JsonResponse
@@ -37,7 +38,7 @@ def upload_file_cloud(filePath):
     bucket = storage.bucket()
     blob = bucket.blob(fileName)
     blob.upload_from_filename(fileName)
-
+    
     # Opt : if you want to make public access from the URL
     blob.make_public()
 
@@ -48,3 +49,27 @@ def updateUrl(pk,url):
     document = Document.objects.get(id=pk)
     document.url = url
     document.save()
+
+
+def deleteDocument(pk):
+    document = Document.objects.get(id=pk)
+    deleteCloud(document.name)
+    document.delete()
+  
+
+def deleteCloud(filePath):
+
+    if not firebase_admin._apps:
+        path = r"C:\Coding\Mariam's Graduation Project\Backend\HealthKeeper\documents\first-data-base-94a72-firebase-adminsdk-107u8-d57fe868f7.json"
+        cred = credentials.Certificate(path)
+        initialize_app(cred, {'storageBucket': 'first-data-base-94a72.appspot.com'})
+        # Put your local file path 
+    fileName = os.path.splitext(filePath)[0]
+    bucket = storage.bucket()
+    blobs = bucket.list_blobs()
+    print(fileName)
+    for blob in blobs:
+        if fileName in blob.name:
+                print(' * deleting', blob)
+                blob.delete()
+    return

@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'dashboard.apps.DashboardConfig',
     'UserProfile.apps.UserprofileConfig',
     'documents.apps.DocumentsConfig',
+    'medications.apps.MedicationsConfig',
+    'appointments.apps.AppointmentsConfig',
     'corsheaders',
     'rest_framework'
 ]
