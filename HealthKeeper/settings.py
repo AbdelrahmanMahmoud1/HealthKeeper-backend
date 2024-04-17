@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'documents.apps.DocumentsConfig',
     'medications.apps.MedicationsConfig',
     'appointments.apps.AppointmentsConfig',
+    'symptomsChecker.apps.SymptomscheckerConfig',
     'corsheaders',
     'rest_framework'
 ]
