@@ -1,8 +1,9 @@
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .serializers import UserProfileSerializer,UserProfileSerializer2,DocumentsSerializer,AppointmentSerializer , MedicationSerializer,DocumentsSerializerFront, ChronicConditionSerializer
+from .serializers import UserProfileSerializer,UserProfileSerializer2,QRcodeSerializer,DocumentsSerializer,AppointmentSerializer , MedicationSerializer,DocumentsSerializerFront, ChronicConditionSerializer
 from UserProfile import views as userViews
+from UserProfile.models import UserProfile as userModel
 from medications import views as mediactionViews
 from documents import views  as documentViews
 from appointments import views as appointmentsViews
@@ -59,9 +60,6 @@ def addUser(request):
 @csrf_exempt
 def check(request):
   
-   print(request.data['symptoms']) 
-   
-
    return Response(symptomsCheckerViews.check(request.data['symptoms']), status=status.HTTP_200_OK)
 
 
@@ -146,6 +144,31 @@ def file_upload_api_view(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['POST'])
+@parser_classes([MultiPartParser])
+@csrf_exempt
+def file_upload_api_view_qr(request):
+  
+    if request.method == 'POST':
+        serializer = QRcodeSerializer(data=request.data)
+        if serializer.is_valid():
+            print(serializer)
+            
+            serializer.save()
+
+            document = documentViews.getFileQr(serializer.data['id'])
+            url = documentViews.upload_file_cloud(document)
+
+            print(serializer.data['id'])
+       
+            user = userModel.objects.get(id = serializer.data['userId'])
+            user.url = url
+            user.save()
+
+            documentViews.updateUrlQr(serializer.data['id'], url)
+
+            return Response(url, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 @csrf_exempt
@@ -156,8 +179,23 @@ def getFiles(request,pk):
 
 @api_view(['GET'])
 @csrf_exempt
+def getFileQr(request,pk):
+    documents = documentViews.getFiles(pk)
+    serializer = DocumentsSerializerFront(documents, many=True)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+@csrf_exempt
 def viewFile(request,pk):
     document = documentViews.getFile(pk)
+    url = documentViews.upload_file_cloud(document)
+    return Response(url, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+@csrf_exempt
+def viewFileQr(request,pk):
+    document = documentViews.getFileQr(pk)
     url = documentViews.upload_file_cloud(document)
     return Response(url, status=status.HTTP_201_CREATED)
 

@@ -3,7 +3,7 @@ import os
 
 # Create your views here.
 from django.http import JsonResponse
-from .models import Document
+from .models import Document,QrCode
 from firebase_admin import credentials, initialize_app, storage
 import firebase_admin
 
@@ -22,9 +22,16 @@ def getFiles(pk):
     documents = Document.objects.filter(userId = pk)
     return documents
 
+def getFilesQr(pk):
+    documents = Document.objects.filter(userId = pk)
+    return documents
 
 def getFile(pk):
     document = Document.objects.get(id=pk)
+    return document.file.path
+
+def getFileQr(pk):
+    document = QrCode.objects.get(id=pk)
     return document.file.path
 
 def upload_file_cloud(filePath):
@@ -50,6 +57,10 @@ def updateUrl(pk,url):
     document.url = url
     document.save()
 
+def updateUrlQr(pk,url):
+    document = QrCode.objects.get(id=pk)
+    document.url = url
+    document.save()
 
 def deleteDocument(pk):
     document = Document.objects.get(id=pk)

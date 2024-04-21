@@ -6,8 +6,8 @@ from UserProfile.models import UserProfile
 
 # Create your models here.
 class Appointmets(models.Model):
-    name = models.CharField(max_length=500, unique=True)
-    doctorName = models.CharField(max_length=500, unique=True)
+    name = models.CharField(max_length=500)
+    doctorName = models.CharField(max_length=500)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
     userId = models.ForeignKey(UserProfile, on_delete=models.CASCADE)

@@ -3,6 +3,8 @@ from UserProfile.models import UserProfile, ChronicCondition
 from documents.models import Document
 from medications.models import Medications
 from appointments.models import Appointmets
+from documents.models import QrCode
+
 from django.core.validators import EmailValidator
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -35,6 +37,11 @@ class ChronicConditionSerializer(serializers.ModelSerializer):
 class DocumentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
+        fields = '__all__'
+
+class QRcodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QrCode
         fields = '__all__'
 
 class MedicationSerializer(serializers.ModelSerializer):

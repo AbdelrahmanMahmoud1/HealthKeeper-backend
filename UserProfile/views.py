@@ -33,6 +33,5 @@ def deleteChronicConditions(id):
 
 
 def login(email):
-    print(email)
     user = UserProfile.objects.get(email=email)
     return user.id
